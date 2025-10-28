@@ -11,12 +11,19 @@ struct CardView: View {
     // MARK: - PROPERTIES
         
     var card: Card
+    @State private var fadeIn: Bool = false
+    @State private var moveDownoard: Bool = false
+    @State private var moveUpward: Bool = false
+    @State private var showAlert: Bool = false
+    
+    var haptics = UIImpactFeedbackGenerator(style: .heavy)
 
     // MARK: - CARD
     
     var body: some View {
         ZStack {
             Image(card.imageName)
+                .opacity(fadeIn ? 1.0 : 0.0)
             
             VStack {
                 Text(card.title)
@@ -29,15 +36,14 @@ struct CardView: View {
                     .fontWeight(.light)
                     .foregroundColor(Color.white)
                     .italic()
-                    
-                    
-
             }
-            .offset(y: -218)
+            .offset(y: moveDownoard ? -218 : -300)
             
             Button {
                 print("Learn".uppercased())
                 playSound(sound: "sound-chime", type: "mp3")
+                self.haptics.impactOccurred()
+                self.showAlert.toggle()
             } label: {
                 HStack {
                     Text(card.callToAction.uppercased())
@@ -57,7 +63,7 @@ struct CardView: View {
                 .clipShape(Capsule())
                 .shadow(color: Color("ColorShadow"), radius: 6, x: 0, y: 3)
             }
-            .offset(y: 210)
+            .offset(y: moveUpward ? 210 : 300)
 
         }
         .frame(width: 335, height: 545)
@@ -66,6 +72,23 @@ struct CardView: View {
         )
         .cornerRadius(16)
         .shadow(radius: 8)
+        .onAppear() {
+            withAnimation(.linear(duration: 1.2)) {
+                self.fadeIn.toggle()
+            }
+            
+            withAnimation(.linear(duration: 0.8)) {
+                self.moveDownoard.toggle()
+                self.moveUpward.toggle()
+            }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text(card.title),
+                message: Text(card.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
 
