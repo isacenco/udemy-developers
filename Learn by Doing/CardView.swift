@@ -14,6 +14,9 @@ struct CardView: View {
     @State private var fadeIn: Bool = false
     @State private var moveDownoard: Bool = false
     @State private var moveUpward: Bool = false
+    @State private var showAlert: Bool = false
+    
+    var haptics = UIImpactFeedbackGenerator(style: .heavy)
 
     // MARK: - CARD
     
@@ -39,6 +42,8 @@ struct CardView: View {
             Button {
                 print("Learn".uppercased())
                 playSound(sound: "sound-chime", type: "mp3")
+                self.haptics.impactOccurred()
+                self.showAlert.toggle()
             } label: {
                 HStack {
                     Text(card.callToAction.uppercased())
@@ -76,6 +81,13 @@ struct CardView: View {
                 self.moveDownoard.toggle()
                 self.moveUpward.toggle()
             }
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text(card.title),
+                message: Text(card.message),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 }
