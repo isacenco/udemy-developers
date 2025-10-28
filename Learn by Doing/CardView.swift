@@ -9,23 +9,23 @@ import SwiftUI
 
 struct CardView: View {
     // MARK: - PROPERTIES
-    
-    var gradient: [Color] = [Color("Color01"), Color("Color02")]
+        
+    var card: Card
 
     // MARK: - CARD
     
     var body: some View {
         ZStack {
-            Image("developer-no1")
+            Image(card.imageName)
             
             VStack {
-                Text("SwiftUI")
+                Text(card.title)
                     .font(.largeTitle)
                     .fontWeight(.heavy)
                     .foregroundColor(Color.white)
                     .multilineTextAlignment(.center)
 
-                Text("Better Apps. Less Code")
+                Text(card.headline)
                     .fontWeight(.light)
                     .foregroundColor(Color.white)
                     .italic()
@@ -39,7 +39,7 @@ struct CardView: View {
                 print("Learn".uppercased())
             } label: {
                 HStack {
-                    Text("Learn")
+                    Text(card.callToAction.uppercased())
                         .fontWeight(.heavy)
                         .foregroundColor(.white)
                         .accentColor(.white)
@@ -51,7 +51,7 @@ struct CardView: View {
                 .padding(.vertical)
                 .padding(.horizontal, 24)
                 .background(
-                    LinearGradient(colors: gradient, startPoint: .leading, endPoint: .trailing)
+                    LinearGradient(colors: card.gradientColors, startPoint: .leading, endPoint: .trailing)
                 )
                 .clipShape(Capsule())
                 .shadow(color: Color("ColorShadow"), radius: 6, x: 0, y: 3)
@@ -61,7 +61,7 @@ struct CardView: View {
         }
         .frame(width: 335, height: 545)
         .background(
-            LinearGradient(colors: gradient, startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: card.gradientColors, startPoint: .top, endPoint: .bottom)
         )
         .cornerRadius(16)
         .shadow(radius: 8)
@@ -69,5 +69,5 @@ struct CardView: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    CardView()
+    CardView(card: cardData[0])
 }
